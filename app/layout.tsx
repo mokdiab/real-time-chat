@@ -26,11 +26,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-gr="false">
+    <html lang="en" data-gr="false" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+          storageKey="theme"
+        >
           <ConvexClientProvider>
             <TooltipProvider>
               {children || <div>No content available</div>}

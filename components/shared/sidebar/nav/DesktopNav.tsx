@@ -11,9 +11,8 @@ import {
   TooltipContent,
 } from '@radix-ui/react-tooltip'
 import Link from 'next/link'
-type Props = React.PropsWithChildren<Record<string, never>>
 
-function DesktopNav({}: Props) {
+function DesktopNav() {
   const { paths } = useNavigation()
 
   return (
@@ -23,28 +22,25 @@ function DesktopNav({}: Props) {
           {paths.map((path, id) => {
             return (
               <li key={id} className='relative'>
-                <Link href={path.href}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <span className='relative'>
-                        <Button
-                          size='icon'
-                          variant={path.isActive ? 'default' : 'outline'}
-                        >
-                          {path.icon}
-                        </Button>
-                        {path.count ? (
-                          <Badge className='absolute left-6 bottom-7 px-2'>
-                            {path.count}
-                          </Badge>
-                        ) : null}
-                      </span>
-                    </TooltipTrigger>
-                    <TooltipContent side='right' align='center'>
-                      <p>{path.name}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </Link>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      asChild
+                      size='icon'
+                      variant={path.isActive ? 'default' : 'outline'}
+                    >
+                      <Link href={path.href}>{path.icon}</Link>
+                    </Button>
+                  </TooltipTrigger>
+                  {path.count ? (
+                    <Badge className='absolute left-6 bottom-7 px-2'>
+                      {path.count}
+                    </Badge>
+                  ) : null}
+                  <TooltipContent side='right' align='center'>
+                    <p>{path.name}</p>
+                  </TooltipContent>
+                </Tooltip>
               </li>
             )
           })}

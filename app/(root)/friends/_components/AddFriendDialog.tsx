@@ -67,7 +67,6 @@ function AddFriendDialog() {
           <DialogTrigger asChild>
             <Button size={"icon"} variant={"outline"}>
               <UserPlus />
-              <span className="sr-only">Add Friend</span>
             </Button>
           </DialogTrigger>
         </TooltipTrigger>
