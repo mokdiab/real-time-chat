@@ -63,12 +63,13 @@ function AddFriendDialog() {
   return (
     <Dialog>
       <Tooltip>
-        <TooltipTrigger>
-          <Button size={"icon"} variant={"outline"}>
-            <DialogTrigger>
+        <TooltipTrigger asChild>
+          <DialogTrigger asChild>
+            <Button size={"icon"} variant={"outline"}>
               <UserPlus />
-            </DialogTrigger>
-          </Button>
+              <span className="sr-only">Add Friend</span>
+            </Button>
+          </DialogTrigger>
         </TooltipTrigger>
         <TooltipContent>
           <p>Add Friend</p>

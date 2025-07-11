@@ -2,11 +2,17 @@ import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
 import { MessageSquare, Users } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export const useNavigation = () => {
   const pathname = usePathname();
+  const [isMounted, setIsMounted] = useState(false);
   const requestsCount = useQuery(api.requests.count);
+  
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const paths = useMemo(
     () => [
       {
@@ -20,10 +26,10 @@ export const useNavigation = () => {
         href: "/friends",
         icon: <Users />,
         isActive: pathname.startsWith("/friends"),
-        count: requestsCount,
+        count: isMounted ? requestsCount : undefined,
       },
     ],
-    [pathname]
+    [pathname, requestsCount, isMounted]
   );
 
   return { paths, requestsCount };

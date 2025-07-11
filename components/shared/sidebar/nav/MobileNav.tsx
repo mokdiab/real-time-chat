@@ -12,7 +12,7 @@ import {
   TooltipContent,
 } from "@radix-ui/react-tooltip";
 import Link from "next/link";
-type Props = {};
+type Props = React.PropsWithChildren<Record<string, never>>;
 
 function MobileNav({}: Props) {
   const { paths } = useNavigation();
@@ -28,18 +28,20 @@ function MobileNav({}: Props) {
               <li key={id} className="relative">
                 <Link href={path.href}>
                   <Tooltip>
-                    <TooltipTrigger>
-                      <Button
-                        size="icon"
-                        variant={path.isActive ? "default" : "outline"}
-                      >
-                        {path.icon}
-                      </Button>
-                      {path.count ? (
-                        <Badge className="absolute left-7 bottom-6 ">
-                          {path.count}
-                        </Badge>
-                      ) : null}
+                    <TooltipTrigger asChild>
+                      <span className="relative">
+                        <Button
+                          size="icon"
+                          variant={path.isActive ? "default" : "outline"}
+                        >
+                          {path.icon}
+                        </Button>
+                        {path.count ? (
+                          <Badge className="absolute left-7 bottom-6">
+                            {path.count}
+                          </Badge>
+                        ) : null}
+                      </span>
                     </TooltipTrigger>
                     <TooltipContent side="right" align="center">
                       <p>{path.name}</p>
