@@ -23,20 +23,22 @@ type Props = {
 
 function Header({ name, imageUrl, options }: Props) {
   return (
-    <Card className='w-full flex rounded-lg items-center p-2 justify-between'>
-      <div className='flex items-center gap-2'>
-        <Link href={'/conversations'} className='block lg:hidden'>
-          <CircleArrowLeft />
-        </Link>
-        <Avatar>
-          <AvatarImage
-            className='w-8 h-8 rounded-full'
-            src={imageUrl}
-            alt={name}
-          />
-          <AvatarFallback>{name.substring(0, 1)}</AvatarFallback>
-        </Avatar>
-        <h2 className='font-semibold'>{name}</h2>
+    <Card className='w-full flex rounded-lg items-center p-2'>
+      <div className='flex items-center gap-2 justify-between w-full'>
+        <div className='flex items-center gap-2'>
+          <Link href={'/conversations'} className='block lg:hidden'>
+            <CircleArrowLeft />
+          </Link>
+          <Avatar>
+            <AvatarImage
+              className='w-8 h-8 rounded-full'
+              src={imageUrl}
+              alt={name}
+            />
+            <AvatarFallback>{name.substring(0, 1)}</AvatarFallback>
+          </Avatar>
+          <h2 className='font-semibold'>{name}</h2>
+        </div>
         <div className='flex gap-2'>
           {options ? (
             <DropdownMenu>
