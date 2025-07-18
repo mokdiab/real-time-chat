@@ -7,20 +7,26 @@ import { Loader2 } from 'lucide-react'
 import Header from './_components/Header'
 import Body from './_components/body/Body'
 import ChatInput from './_components/input/ChatInput'
-import { use, useState } from 'react'
+import { useState, use } from 'react'
 import RemoveFriendDialog from '../dialogs/RemoveFriendDialog'
-type props = {
-  params: {
+import DeleteGroupDialog from '../dialogs/DeleteGroupDialog'
+import LeaveGroupDialog from '../dialogs/LeaveGroupDialog'
+
+interface PageProps {
+  params: Promise<{
     conversationId: Id<'conversations'>
-  }
+  }>
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>
 }
-function ConversationPage({ params }: props) {
+type Props = PageProps
+export default function ConversationPage({ params }: Props) {
   const { conversationId } = use(params)
   const conversation = useQuery(api.conversation.get, { id: conversationId })
   const [removeFriendDialogOpen, setRemoveFriendDialogOpen] = useState(false)
   const [leaveGroupDialogOpen, setLeaveGroupDialogOpen] = useState(false)
   const [deleteGroupDialogOpen, setDeleteGroupDialogOpen] = useState(false)
-  const [callType, setCalltype] = useState<'Audio' | 'video' | null>(null)
+  // const [callType, setCalltype] = useState<'Audio' | 'video' | null>(null)
+
   return conversation === undefined ? (
     <div className='w-full h-full flex items-center justify-center'>
       <Loader2 className='h-8 w-8' />
@@ -36,11 +42,21 @@ function ConversationPage({ params }: props) {
         open={removeFriendDialogOpen}
         setOpen={setRemoveFriendDialogOpen}
       />
+      <LeaveGroupDialog
+        conversationId={conversationId}
+        open={leaveGroupDialogOpen}
+        setOpen={setLeaveGroupDialogOpen}
+      />
+      <DeleteGroupDialog
+        conversationId={conversationId}
+        open={deleteGroupDialogOpen}
+        setOpen={setDeleteGroupDialogOpen}
+      />
       <Header
         name={
           (conversation.isGroup
             ? conversation.name
-            : conversation.otherMember.username) ?? ''
+            : conversation.otherMember?.username) ?? ''
         }
         imageUrl={
           conversation.isGroup ? undefined : conversation.otherMember?.imageUrl
@@ -54,7 +70,7 @@ function ConversationPage({ params }: props) {
                   onClick: () => setLeaveGroupDialogOpen(true),
                 },
                 {
-                  label: 'Remove Group',
+                  label: 'Delete Group',
                   destructive: true,
                   onClick: () => setDeleteGroupDialogOpen(true),
                 },
@@ -68,10 +84,18 @@ function ConversationPage({ params }: props) {
               ]
         }
       />
-      <Body />
+      <Body
+        members={
+          conversation.isGroup
+            ? conversation.otherMembers
+              ? conversation.otherMembers
+              : []
+            : conversation.otherMember
+              ? [conversation.otherMember]
+              : []
+        }
+      />
       <ChatInput />
     </ConversationContainer>
   )
 }
-
-export default ConversationPage

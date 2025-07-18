@@ -1,24 +1,21 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 import { Id } from '@/convex/_generated/dataModel'
-import { User } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
 type Props = {
   id: Id<'conversations'>
-  imageUrl: string
-  username: string
+  name: string
   lastMessageSender?: string
   lastMessageContent?: string
   unseenCount?: number
 }
 
-function DmConversations({
+function GroupConversationItem({
   id,
-  imageUrl,
-  username,
+  name,
   lastMessageContent,
   lastMessageSender,
   unseenCount,
@@ -28,13 +25,12 @@ function DmConversations({
       <Card className='p-2 flex flex-row items-center justify-between'>
         <div className='flex flex-row items-center gap-4 truncate'>
           <Avatar>
-            <AvatarImage className='w-12 h-auto rounded-full' src={imageUrl} />
             <AvatarFallback>
-              <User />
+              {name.charAt(0).toLocaleUpperCase()}
             </AvatarFallback>
           </Avatar>
           <div className='flex flex-col truncate'>
-            <h4 className='truncate'>{username}</h4>
+            <h4 className='truncate'>{name}</h4>
             {lastMessageSender && lastMessageContent ? (
               <span className='text-sm text-muted-foreground flex truncate overflow-ellipsis'>
                 <span className='font-semibold'>
@@ -57,4 +53,4 @@ function DmConversations({
   )
 }
 
-export default DmConversations
+export default GroupConversationItem

@@ -13,7 +13,7 @@ import {
 import Link from 'next/link'
 
 function DesktopNav() {
-  const { paths } = useNavigation()
+  const paths = useNavigation()
 
   return (
     <Card className='hidden lg:flex flex-col justify-between items-center h-full w-16 px-2 py-4'>

@@ -1,17 +1,18 @@
-import React from "react";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import React from 'react'
+import { format } from 'date-fns'
+import { cn } from '@/lib/utils'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 type Props = {
-  fromCurrentUser: boolean;
-  senderImage: string;
-  senderName: string;
-  lastByUser: boolean;
-  content: string[];
-  createdAt: number;
-  type: string;
-};
+  fromCurrentUser: boolean
+  senderImage: string
+  senderName: string
+  lastByUser: boolean
+  content: string[]
+  createdAt: number
+  type: string
+  seen?: React.ReactNode
+}
 
 function Message({
   fromCurrentUser,
@@ -21,62 +22,64 @@ function Message({
   content,
   createdAt,
   type,
+  seen,
 }: Props) {
   const formatTime = (timestamp: number) => {
-    return format(timestamp, "HH:MM");
-  };
+    return format(timestamp, 'HH:MM')
+  }
   return (
     <div
-      className={cn("flex items-end", {
-        "justify-end": fromCurrentUser,
+      className={cn('flex items-end', {
+        'justify-end': fromCurrentUser,
       })}
     >
       <div
-        className={cn("flex flex-col w-full mx-2", {
-          "order-1 items-end": fromCurrentUser,
-          "order-2 items-start": !fromCurrentUser,
+        className={cn('flex flex-col w-full mx-2', {
+          'order-1 items-end': fromCurrentUser,
+          'order-2 items-start': !fromCurrentUser,
         })}
       >
         <div
-          className={cn("px-4 py-2 rounded-lg max-w-[70%]", {
-            "bg-primary text-primary-foreground": fromCurrentUser,
-            "bg-secondary text-secondary-foreground": !fromCurrentUser,
-            "rounded-br-none": !lastByUser && fromCurrentUser,
-            "rounded-bl-none": !lastByUser && !fromCurrentUser,
+          className={cn('px-4 py-2 rounded-lg max-w-[70%]', {
+            'bg-primary text-primary-foreground': fromCurrentUser,
+            'bg-secondary text-secondary-foreground': !fromCurrentUser,
+            'rounded-br-none': !lastByUser && fromCurrentUser,
+            'rounded-bl-none': !lastByUser && !fromCurrentUser,
           })}
         >
-          {type === "text" ? (
-            <p className="text-wrap break-words whitespace-pre-wrap">
+          {type === 'text' ? (
+            <p className='text-wrap break-words whitespace-pre-wrap break-all'>
               {content}
             </p>
           ) : null}
           <p
-            className={cn("text-xs flex w-full my-1", {
-              "text-primary-foreground justify-end": fromCurrentUser,
-              "text-secondary-foreground justify-start": !fromCurrentUser,
+            className={cn('text-xs flex w-full my-1', {
+              'text-primary-foreground justify-end': fromCurrentUser,
+              'text-secondary-foreground justify-start': !fromCurrentUser,
             })}
           >
-            {" "}
+            {' '}
             {formatTime(createdAt)}
           </p>
         </div>
+        {seen}
       </div>
       <Avatar
-        className={cn("relative h-8 w-8", {
-          "order-2": fromCurrentUser,
-          "order-1": !fromCurrentUser,
+        className={cn('relative h-8 w-8', {
+          'order-2': fromCurrentUser,
+          'order-1': !fromCurrentUser,
           invisible: lastByUser,
         })}
       >
         <AvatarImage
-          className="w-full h-full rounded-full"
+          className='w-full h-full rounded-full'
           src={senderImage}
           alt={senderName}
         />
         <AvatarFallback>{senderName.substring(0, 1)}</AvatarFallback>
       </Avatar>
     </div>
-  );
+  )
 }
 
-export default Message;
+export default Message

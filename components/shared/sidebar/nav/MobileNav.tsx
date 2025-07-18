@@ -14,7 +14,7 @@ import {
 import Link from 'next/link'
 
 function MobileNav() {
-  const { paths } = useNavigation()
+  const paths = useNavigation()
 
   const { isActive } = useConversation()
   if (isActive) return null
