@@ -18,6 +18,10 @@ import { z } from 'zod'
 import TextareaAutosize from 'react-textarea-autosize'
 import { Button } from '@/components/ui/button'
 import { SendHorizonal } from 'lucide-react'
+import MessageActionsPopover from './MessageActionsPopover'
+import { useEffect, useRef, useState } from 'react'
+import { useTheme } from 'next-themes'
+import EmojiPicker, { EmojiClickData, Theme } from 'emoji-picker-react'
 const chatMessageSchema = z.object({
   content: z.string().min(1, {
     message: 'Please enter a message',
@@ -28,16 +32,34 @@ function ChatInput() {
   const { mutate: createMessage, pending } = useMutationState(
     api.message.create
   )
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null)
+  //eslint-disable-next-line
+  const emojiPickerRef = useRef<any>(null)
+  const [emojiPickerOpen, setEmojiPickerOpen] = useState(false)
+  const [cursorPosition, setCursorPosition] = useState(0)
+  const { theme } = useTheme()
   const form = useForm<z.infer<typeof chatMessageSchema>>({
     resolver: zodResolver(chatMessageSchema),
     defaultValues: { content: '' },
   })
+  const content = form.watch('content', '')
   //eslint-disable-next-line
   const handleInputChange = (event: any) => {
     const { value, selectionStart } = event.target
     if (selectionStart !== null) {
       form.setValue('content', value)
+      setCursorPosition(selectionStart)
     }
+  }
+  const handleEmojiClick = (emojiData: EmojiClickData) => {
+    const emoji = emojiData.emoji
+    const newContent =
+      content.substring(0, cursorPosition) +
+      emoji +
+      content.substring(cursorPosition)
+    form.setValue('content', newContent)
+    setCursorPosition(cursorPosition + emoji.length)
+    setEmojiPickerOpen(false)
   }
   const handleSubmit = async (values: z.infer<typeof chatMessageSchema>) => {
     createMessage({
@@ -47,6 +69,7 @@ function ChatInput() {
     })
       .then(() => {
         form.reset()
+        textareaRef.current?.focus()
       })
       .catch((error) => {
         console.log(error.message)
@@ -57,9 +80,34 @@ function ChatInput() {
         )
       })
   }
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        emojiPickerRef.current &&
+        !emojiPickerRef.current.contains(event.target)
+      ) {
+        setEmojiPickerOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
   return (
     <Card className='w-full p-2 rounded-lg relative'>
+      <div className='absolute bottom-16' ref={emojiPickerRef}>
+        <EmojiPicker
+          theme={theme as Theme}
+          open={emojiPickerOpen}
+          onEmojiClick={handleEmojiClick}
+          lazyLoadEmojis
+        />
+      </div>
       <div className='flex gap-2 items-end w-full'>
+        <MessageActionsPopover
+          setEmojiPickerOpen={(value) => setEmojiPickerOpen(value)}
+        />
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
@@ -82,6 +130,10 @@ function ChatInput() {
                         rows={1}
                         maxRows={3}
                         {...field}
+                        ref={(e) => {
+                          field.ref(e)
+                          textareaRef.current = e
+                        }}
                         onChange={handleInputChange}
                         onClick={handleInputChange}
                         placeholder='Type a message...'

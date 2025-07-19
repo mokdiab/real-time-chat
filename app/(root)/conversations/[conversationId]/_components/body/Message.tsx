@@ -2,6 +2,9 @@ import React from 'react'
 import { format } from 'date-fns'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import ImagePreview from './ImagePreview'
+import FilePreview from './FilePreview'
+import { Badge } from '@/components/ui/badge'
 
 type Props = {
   fromCurrentUser: boolean
@@ -51,6 +54,14 @@ function Message({
             <p className='text-wrap break-words whitespace-pre-wrap break-all'>
               {content}
             </p>
+          ) : type === 'image' ? (
+            <ImagePreview urls={content} />
+          ) : type === 'file' ? (
+            <FilePreview url={content[0]} />
+          ) : type === 'call' ? (
+            <Badge variant='secondary' className='w-fit'>
+              Joined Call at {formatTime(createdAt)}
+            </Badge>
           ) : null}
           <p
             className={cn('text-xs flex w-full my-1', {
@@ -58,7 +69,6 @@ function Message({
               'text-secondary-foreground justify-start': !fromCurrentUser,
             })}
           >
-            {' '}
             {formatTime(createdAt)}
           </p>
         </div>

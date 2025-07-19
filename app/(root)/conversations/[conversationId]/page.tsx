@@ -25,7 +25,7 @@ export default function ConversationPage({ params }: Props) {
   const [removeFriendDialogOpen, setRemoveFriendDialogOpen] = useState(false)
   const [leaveGroupDialogOpen, setLeaveGroupDialogOpen] = useState(false)
   const [deleteGroupDialogOpen, setDeleteGroupDialogOpen] = useState(false)
-  // const [callType, setCalltype] = useState<'Audio' | 'video' | null>(null)
+  const [callType, setCallType] = useState<'audio' | 'video' | null>(null)
 
   return conversation === undefined ? (
     <div className='w-full h-full flex items-center justify-center'>
@@ -83,6 +83,7 @@ export default function ConversationPage({ params }: Props) {
                 },
               ]
         }
+        setCallType={setCallType}
       />
       <Body
         members={
@@ -94,6 +95,8 @@ export default function ConversationPage({ params }: Props) {
               ? [conversation.otherMember]
               : []
         }
+        callType={callType}
+        setCallType={setCallType}
       />
       <ChatInput />
     </ConversationContainer>

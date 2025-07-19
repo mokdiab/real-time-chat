@@ -6,10 +6,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { CircleArrowLeft, Settings } from 'lucide-react'
+import { CircleArrowLeft, Phone, Settings, Video } from 'lucide-react'
 import Link from 'next/link'
-import React from 'react'
+import React, { Dispatch, SetStateAction } from 'react'
 import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
 
 type Props = {
   name: string
@@ -19,9 +20,10 @@ type Props = {
     destructive: boolean
     onClick: () => void
   }[]
+  setCallType: Dispatch<SetStateAction<'audio' | 'video' | null>>
 }
 
-function Header({ name, imageUrl, options }: Props) {
+function Header({ name, imageUrl, options, setCallType }: Props) {
   return (
     <Card className='w-full flex rounded-lg items-center p-2'>
       <div className='flex items-center gap-2 justify-between w-full'>
@@ -40,6 +42,22 @@ function Header({ name, imageUrl, options }: Props) {
           <h2 className='font-semibold'>{name}</h2>
         </div>
         <div className='flex gap-2'>
+          <Button
+            variant='secondary'
+            size='icon'
+            onClick={() => setCallType('audio')}
+            className='h-10 w-10'
+          >
+            <Phone />
+          </Button>
+          <Button
+            variant='secondary'
+            size='icon'
+            onClick={() => setCallType('video')}
+            className='h-10 w-10'
+          >
+            <Video />
+          </Button>
           {options ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
